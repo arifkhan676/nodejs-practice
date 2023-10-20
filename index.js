@@ -1,20 +1,22 @@
+const { MongoClient, ServerApiVersion } = require("mongodb");
+
 const express = require("express");
 var cors = require("cors");
 var bodyParser = require("body-parser");
 const app = express();
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
+  res.send("hello i am working");
 });
 
 app.listen(3000, () => {
   console.log("listening port from 3000");
 });
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
 const uri =
   "mongodb+srv://nodejsproject:nodejs5500@cluster0.8dsqzra.mongodb.net/nodejsproject?retryWrites=true&w=majority";
 
@@ -27,30 +29,19 @@ const client = new MongoClient(uri, {
   },
 });
 
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    const dbName = client.db("nodejsproject").collection("products");
+client.connect((err) => {
+  const collection = client.db("nodejsproject").collection("products");
+  collection.insertOne({ name: "What", age: 23, religion: "Islam" });
+  console.log("database connected");
+});
+
+/*
+
+const dbName = client.db("nodejsproject").collection("products");
     await dbName.insertOne({ name: "arif", age: 23, religion: "Islam" });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
-
-    app.post("/addProduct", (req, res) => {
-      const user = req.body;
-    });
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
-}
-run().catch(console.dir);
-
-/*
-
-
 
 
 
